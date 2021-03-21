@@ -7,8 +7,7 @@ def test_pass():
 
 
 def get_length(test_string):
-    """Return length of the string"""
-    return None
+    return len(test_string)
 
 
 @pytest.mark.parametrize("test_string,result", [("test", 4), ("\t", 1)])
@@ -17,8 +16,7 @@ def test_string_length(test_string, result):
 
 
 def remove_spaces(test_string):
-    """Removes spaces, tabs for the string"""
-    return None
+    return test_string.replace(" ", "").replace("\t", "")
 
 
 @pytest.mark.parametrize("test_string,result", [("test", "test"), ("\ttab", "tab"), ("  whitespace ", "whitespace")])
