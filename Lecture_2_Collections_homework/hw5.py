@@ -24,3 +24,12 @@ assert = custom_range(string.ascii_lowercase, 'g', 'p') == ['g', 'h', 'i', 'j', 
 assert = custom_range(string.ascii_lowercase, 'p', 'g', -2) == ['p', 'n', 'l', 'j', 'h']
 
 """
+
+def custom_range(sequence, *args) -> [str]:
+    l = len(args)
+    if l == 1:
+        return list(sequence[0:sequence.index(args[0]):1])
+    elif l == 2:
+        return list(sequence[sequence.index(args[0]):sequence.index(args[1]):1])
+    else:
+        return list(sequence[sequence.index(args[0]):sequence.index(args[1]):args[2]])

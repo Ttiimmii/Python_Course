@@ -28,16 +28,42 @@ output lines:
 foo@example.com 729.83 EUR accountName 2021-01:0 validate_date
 bar@example.com 729.83 accountName 2021-01-02 validate_line
 """
+import datetime
 from typing import Callable, Iterable
 
 
 def validate_line(line: str) -> bool:
-    ...
+    return len(line.split(" ")) == 5
 
 
 def validate_date(date: str) -> bool:
-    ...
-
+    date_parts = date.split("-")
+    return all(item.isnumeric() for item in date_parts) and \
+           len(date_parts[0]) == 4 and len(date_parts[1]) == 2 and len(date_parts[2]) == 2
+#    try:
+#        datetime.datetime.strptime(date, '%Y-%m-%d')
+#        return True
+#    except ValueError:
+#        return False
 
 def check_data(filepath: str, validators: Iterable[Callable]) -> str:
-    ...
+    filelines = get_file_lines(filepath)
+    with open("result.txt", "wt", encoding="utf-8") as resultfile:
+        for line in filelines:
+            validations = []
+            for validator in validators:
+                if validator.__name__ == "validate_line":
+                    validations.append((validator.__name__, validator(line)))
+                elif validator.__name__ == "validate_date":
+                    content = line.split(" ")
+                    validations.append((validator.__name__, validator(content[len(content) - 1])))
+            first_issue = next((x for x in validations if x[1] is False), None)
+            if first_issue is not None:
+                resultfile.write(f"{line} {first_issue[0]}\n")
+                resultfile.flush()
+        return resultfile.name
+    
+def get_file_lines(filepath: str) -> Iterable[str]:
+    with open(filepath, "r") as file:
+        lines = [i.strip() for i in file.readlines()]
+        return lines

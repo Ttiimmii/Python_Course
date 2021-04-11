@@ -19,14 +19,13 @@ data = [
 
 @pytest.fixture
 def file_path():
-    tp = NamedTemporaryFile(mode="a")
+    tp = NamedTemporaryFile(mode="a", delete=False)
     for line in data:
         tp.write(line + "\n")
         tp.flush()
 
     yield tp.name
     tp.close()
-    os.remove(os.path.abspath("result.txt"))
 
 
 def test_hw1(file_path):
@@ -37,7 +36,7 @@ def test_hw1(file_path):
 
     assert i == len(data) - 1
 
-
+    
 def test_real_file():
     result_path = check_data("data.txt", [validate_date, validate_line])
     with open(result_path) as res:

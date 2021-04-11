@@ -21,4 +21,6 @@ from typing import List, Tuple
 
 
 def major_and_minor_elem(inp: List) -> Tuple[int, int]:
-    ...
+    comparison_result = [(li, inp.count(li)) for li in set(inp)]
+    comparison_result.sort(key=lambda tup: tup[1], reverse=True)
+    return comparison_result[0][0],comparison_result[len(comparison_result) - 1][0]
